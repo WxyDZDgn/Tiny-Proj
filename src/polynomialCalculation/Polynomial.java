@@ -77,24 +77,6 @@ public class Polynomial {
 		return getCoefficientPolynomial(coefficientPolynomial, res, i, j);
 	}
 
-	public Polynomial multiply(Polynomial coefficientPolynomial) {
-		List<Fraction> newFormula = new ArrayList<>();
-		int sizeA = this.degree(), sizeB = coefficientPolynomial.degree();
-		for(int i = 0; i <= sizeA + sizeB; ++i) {
-			newFormula.add(Fraction.ZERO);
-		}
-		for(int a = 0; a <= sizeA; ++a) {
-			for(int b = 0; b <= sizeB; ++b) {
-				newFormula.set(
-						a + b,
-						newFormula.get(a + b)
-								  .add(this.getCoefficient(a).multiply(coefficientPolynomial.getCoefficient(b)))
-				);
-			}
-		}
-		return new Polynomial(newFormula.reversed());
-	}
-
 	private Polynomial getCoefficientPolynomial(
 			Polynomial coefficientPolynomial, List<Fraction> res, int i, int j
 	) {
@@ -111,6 +93,37 @@ public class Polynomial {
 
 	public Polynomial remainder(Polynomial coefficientPolynomial) {
 		return this.divideAndRemainder(coefficientPolynomial)[1];
+	}
+
+	@Deprecated
+	public Polynomial gcd(Polynomial coefficientPolynomial) {
+
+		return coefficientPolynomial.degree() != 0 ?
+				coefficientPolynomial.gcd(this.remainder(coefficientPolynomial)).monic()[1] :
+				this;
+	}
+
+	public Polynomial[] monic() {
+		Polynomial lambda = new Polynomial(Fraction.ONE.divide(this.getCoefficient(this.degree())), 0);
+		return new Polynomial[]{lambda, lambda.multiply(this)};
+	}
+
+	public Polynomial multiply(Polynomial coefficientPolynomial) {
+		List<Fraction> newFormula = new ArrayList<>();
+		int sizeA = this.degree(), sizeB = coefficientPolynomial.degree();
+		for(int i = 0; i <= sizeA + sizeB; ++i) {
+			newFormula.add(Fraction.ZERO);
+		}
+		for(int a = 0; a <= sizeA; ++a) {
+			for(int b = 0; b <= sizeB; ++b) {
+				newFormula.set(
+						a + b,
+						newFormula.get(a + b)
+								  .add(this.getCoefficient(a).multiply(coefficientPolynomial.getCoefficient(b)))
+				);
+			}
+		}
+		return new Polynomial(newFormula.reversed());
 	}
 
 	public List<Fraction> getRatioRoots() {
