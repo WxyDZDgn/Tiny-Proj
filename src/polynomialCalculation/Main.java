@@ -26,7 +26,8 @@ public class Main {
 		System.out.printf("p / q = %s%n", p.divide(q));
 		System.out.printf("p %% q = %s%n", p.remainder(q));
 		System.out.printf("deg(p), deg(q) = %s, %s%n", p.degree(), q.degree());
-		System.out.printf("p(3) = %s%n", p.valueOf(new Fraction(3)));
+		System.out.printf("monic(p) = %s * (%s)%n", p.monic()[0], p.monic()[1]);
+		System.out.printf("p(1/3) = %s%n", p.valueOf(new Fraction(1, 3)));
 		System.out.printf("ratio roots of p: %s%n", p.getRatioRoots());
 	}
 }
