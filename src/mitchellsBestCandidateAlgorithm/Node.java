@@ -36,8 +36,13 @@ public class Node {
 				if(res >= 0 && (min < 0 || min >= res)) min = res;
 			}
 		} else {
-			Node n = this.nodes[this.getArea(point)];
-			min = n.getMinimumDistanceSquare(point);
+			int area = getArea(point);
+			for(int i = 0; i <= 3; ++i) {
+				if(i == 2 && !isInside(point)) continue;
+				Node n = nodes[(area + i) % 4];
+				long res = n.getMinimumDistanceSquare(point);
+				if(res >= 0 && (min < 0 || min >= res)) min = res;
+			}
 		}
 		return min;
 	}
@@ -68,9 +73,16 @@ public class Node {
 		Point mid = Point.getMiddlePoint(this.DIAG1, this.DIAG2);
 		long x = point.getX() - mid.getX(), y = point.getY() - mid.getY();
 		if(x >= 0 && y >= 0) return AREA_0;
-		if(x >= 0 && y < 0) return AREA_1;
-		if(x < 0 && y >= 0) return AREA_2;
+		if(x < 0 && y >= 0) return AREA_1;
+		if(x < 0 && y < 0) return AREA_2;
 		return AREA_3;
+	}
+
+	private boolean isInside(Point point) {
+		long u = Math.max(this.DIAG1.getY(), this.DIAG2.getY()), d = Math.min(this.DIAG1.getY(), this.DIAG2.getY());
+		long r = Math.max(this.DIAG1.getX(), this.DIAG2.getX()), l = Math.min(this.DIAG1.getX(), this.DIAG2.getX());
+		return d <= point.getY() && point.getY() <= u &&
+			   l <= point.getX() && point.getX() <= r;
 	}
 
 	public List<Point> getPoints() {
